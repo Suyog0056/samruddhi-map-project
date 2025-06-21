@@ -3,11 +3,11 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from .models import State, District, Taluka, Village
 
-# Renders map template
+
 def map_view(request):
     return render(request, 'maps/map.html')
 
-# JSON for cascading dropdowns
+
 def get_states(request):
     states = State.objects.all().values("id", "name")
     return JsonResponse(list(states), safe=False)
@@ -33,7 +33,7 @@ def village_data(request, id):
     }
     return JsonResponse(data)
 
-# GeoJSON for polygon highlighting
+
 def state_geojson(request, state_id):
     geojson = serialize('geojson', State.objects.filter(id=state_id), geometry_field='geom', fields=('name',))
     return HttpResponse(geojson, content_type='application/json')
