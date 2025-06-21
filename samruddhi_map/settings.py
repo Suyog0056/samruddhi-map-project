@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Make sure templates/ folder exists or create it
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -36,16 +36,16 @@ INSTALLED_APPS = [
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',  # required
+    'django.contrib.sessions.middleware.SessionMiddleware',  
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',  # required
-    'django.contrib.messages.middleware.MessageMiddleware',  # required
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',  
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',  # ✅ GeoDjango + PostgreSQL
+        'ENGINE': 'django.contrib.gis.db.backends.postgis', 
         'NAME': 'samruddhi_db',
         'USER': 'postgres',
         'PASSWORD': 'Suyog@2001',
@@ -65,7 +65,7 @@ SECRET_KEY = 'django-insecure-94sj*3%_your_custom_generated_secret_key_here'
 
 STATIC_URL = '/static/'
 
-# Optional if you're placing static files manually inside app
+
 import os
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'maps', 'static')
