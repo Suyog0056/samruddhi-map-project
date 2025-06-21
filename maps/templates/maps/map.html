@@ -27,7 +27,7 @@
 
   <div id="map"></div>
 
-  <!-- Leaflet and Axios -->
+  
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 
@@ -58,7 +58,7 @@
     });
   }
 
-  // Load States
+
   axios.get('/states/').then(res => {
     res.data.forEach(state => {
       const option = document.createElement('option');
