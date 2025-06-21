@@ -1,0 +1,14 @@
+{
+  "type": "FeatureCollection",
+  "features": [{
+    "type": "Feature",
+    "geometry": {
+      "type": "LineString",
+      "coordinates": [
+        [72.8777, 19.0760],
+        [75.7139, 19.9975]
+      ]
+    },
+    "properties": { "name": "Samruddhi Mahamarg" }
+  }]
+}

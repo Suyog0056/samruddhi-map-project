@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Samruddhi Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <style>
+    #map { height: 500px; margin-top: 20px; }
+    select { margin-right: 10px; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <h3>Samruddhi Mahamarg Map</h3>
+
+  <div>
+    <label>State:</label>
+    <select id="stateSelect"><option value="">Select State</option></select>
+
+    <label>District:</label>
+    <select id="districtSelect"><option value="">Select District</option></select>
+
+    <label>Taluka:</label>
+    <select id="talukaSelect"><option value="">Select Taluka</option></select>
+
+    <label>Village:</label>
+    <select id="villageSelect"><option value="">Select Village</option></select>
+  </div>
+
+  <div id="map"></div>
+
+  <!-- Leaflet and Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+<script>
+  const map = L.map('map').setView([20.5937, 78.9629], 5); // India center
+  const baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+  baseLayer.addTo(map);
+
+  let currentLayer = null;
+
+  function highlightGeoJSON(url, popupCallback = null) {
+    axios.get(url).then(res => {
+      if (currentLayer) {
+        map.removeLayer(currentLayer);
+      }
+      currentLayer = L.geoJSON(res.data, {
+        style: { color: 'blue', weight: 3 },
+        onEachFeature: function (feature, layer) {
+          if (popupCallback) {
+            popupCallback(feature, layer);
+          } else if (feature.properties && feature.properties.name) {
+            layer.bindPopup(feature.properties.name);
+          }
+        }
+      }).addTo(map);
+
+      map.fitBounds(currentLayer.getBounds());
+    });
+  }
+
+  // Load States
+  axios.get('/states/').then(res => {
+    res.data.forEach(state => {
+      const option = document.createElement('option');
+      option.value = state.id;
+      option.text = state.name;
+      document.getElementById('stateSelect').appendChild(option);
+    });
+  });
+
+  document.getElementById('stateSelect').onchange = function () {
+    const stateID = this.value;
+    axios.get(`/districts/${stateID}/`).then(res => {
+      const districtSelect = document.getElementById('districtSelect');
+      districtSelect.innerHTML = '<option value="">Select District</option>';
+      res.data.forEach(dist => {
+        const option = document.createElement('option');
+        option.value = dist.id;
+        option.text = dist.name;
+        districtSelect.appendChild(option);
+      });
+    });
+
+    if (stateID) {
+      highlightGeoJSON(`/state-geojson/${stateID}/`);
+    }
+  };
+
+  document.getElementById('districtSelect').onchange = function () {
+    const districtID = this.value;
+    axios.get(`/talukas/${districtID}/`).then(res => {
+      const talukaSelect = document.getElementById('talukaSelect');
+      talukaSelect.innerHTML = '<option value="">Select Taluka</option>';
+      res.data.forEach(taluka => {
+        const option = document.createElement('option');
+        option.value = taluka.id;
+        option.text = taluka.name;
+        talukaSelect.appendChild(option);
+      });
+    });
+
+    if (districtID) {
+      highlightGeoJSON(`/district-geojson/${districtID}/`);
+    }
+  };
+
+  document.getElementById('talukaSelect').onchange = function () {
+    const talukaID = this.value;
+    axios.get(`/villages/${talukaID}/`).then(res => {
+      const villageSelect = document.getElementById('villageSelect');
+      villageSelect.innerHTML = '<option value="">Select Village</option>';
+      res.data.forEach(village => {
+        const option = document.createElement('option');
+        option.value = village.id;
+        option.text = village.name;
+        villageSelect.appendChild(option);
+      });
+    });
+
+    if (talukaID) {
+      highlightGeoJSON(`/taluka-geojson/${talukaID}/`);
+    }
+  };
+
+  document.getElementById('villageSelect').onchange = function () {
+    const villageID = this.value;
+
+    if (villageID) {
+      highlightGeoJSON(`/village-geojson/${villageID}/`, function (feature, layer) {
+        axios.get(`/village-data/${villageID}/`).then(res => {
+          const popupText = `
+            <b>${feature.properties.name}</b><br>
+            Population: ${res.data.population}<br>
+            Info: ${res.data.info}
+          `;
+          layer.bindPopup(popupText).openPopup();
+        });
+      });
+    }
+  };
+</script>
+
+</body>
+</html>

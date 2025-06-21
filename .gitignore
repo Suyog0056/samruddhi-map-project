@@ -1,0 +1,23 @@
+# Django
+*.pyc
+__pycache__/
+db.sqlite3
+*.log
+.env
+*.pot
+*.py[cod]
+media/
+staticfiles/
+local_settings.py
+
+# VSCode, PyCharm, OS files
+.vscode/
+.idea/
+.DS_Store
+
+# Postgres dump (optional)
+*.sql
+
+# Python virtualenv
+venv/
+env/
