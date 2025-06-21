@@ -9,7 +9,7 @@ urlpatterns = [
     path('villages/<int:taluka_id>/', views.get_villages),
     path('village-data/<int:id>/', views.village_data),
 
-    # ✅ GeoJSON endpoints for polygon highlighting
+    
     path('state-geojson/<int:state_id>/', views.state_geojson),
     path('district-geojson/<int:district_id>/', views.district_geojson),
     path('taluka-geojson/<int:taluka_id>/', views.taluka_geojson),
